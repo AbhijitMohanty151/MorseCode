@@ -124,6 +124,7 @@ public class Translate extends AppCompatActivity {
             Uri selectedImage = data.getData();
             recognizeTextFromImage(selectedImage);
         }
+        convertToMorseOrEnglish();
     }
 
     private void recognizeTextFromImage(Uri uri) {
