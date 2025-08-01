@@ -13,9 +13,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -58,28 +60,7 @@ public class Translate extends AppCompatActivity {
         cam = findViewById(R.id.cam);
 
         initMap();
-//
-//        galleryLauncher = registerForActivityResult(
-//                new ActivityResultContracts.StartActivityForResult(),
-//                result -> {
-//                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-//                        Uri imageUri = result.getData().getData();
-//                        if (imageUri != null) {
-//                            recognizeTextFromImage(imageUri);
-//                        }
-//                    }
-//                });
-//
-//        cameraLauncher = registerForActivityResult(
-//                new ActivityResultContracts.StartActivityForResult(),
-//                result -> {
-//                    if (result.getResultCode() == Activity.RESULT_OK) {
-//                        if (cameraImageUri != null) {
-//                            recognizeTextFromImage(cameraImageUri);
-//                        }
-//                    }
-//                });
-//
+
         cam.setOnClickListener(v -> showImageSourceDialog());
 
         translate.setOnClickListener(v -> convertToMorseOrEnglish());
@@ -184,18 +165,18 @@ public class Translate extends AppCompatActivity {
         for (int i = 0; i < s.length(); i++) {
             char ch = s.charAt(i);
             if (ch == '.' || ch == '-') {
-                int x = s.indexOf(' ', i + 1);
+                int x = giveNext(s,i+1);
                 if (x == -1) break;
                 String code = s.substring(i, x);
-                eng_res.append(map.getOrDefault(code, "?"));
+                eng_res.append(map.getOrDefault(code, " "));
                 morse_res.append(" ").append(code);
-                i = x;
+                i = x-1;
             } else if (ch == ' ') {
                 eng_res.append(" ");
                 morse_res.append(" ");
             } else {
                 String lowerChar = String.valueOf(ch).toLowerCase();
-                morse_res.append(" ").append(map.getOrDefault(lowerChar, "?"));
+                morse_res.append(" ").append(map.getOrDefault(lowerChar, " "));
                 eng_res.append(ch);
             }
         }
@@ -204,43 +185,39 @@ public class Translate extends AppCompatActivity {
         morse.setText(morse_res.toString());
     }
 
-//    private boolean checkPermission() {
-//        return ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-//                && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-//    }
-//
-//    private void requestPermission() {
-//        ActivityCompat.requestPermissions(this,
-//                new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE},
-//                PERMISSION_CODE);
-//    }
-//
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-//                                           @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if (requestCode == PERMISSION_CODE) {
-//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                showImageSourceDialog();
-//            }
-//        }
-//    }
-
+    private int giveNext(String s, int i){
+        int l=s.length();
+        for(;i<l && (s.charAt(i)=='.' || s.charAt(i)=='.') ;i++);
+        return (i==l)?-1:i;
+    }
     private void initMap() {
-        String[] letters = "abcdefghijklmnopqrstuvwxyz0123456789".split("");
+
+        String[] characters = {
+                "a", "b", "c", "d", "e", "f", "g",
+                "h", "i", "j", "k", "l", "m", "n",
+                "o", "p", "q", "r", "s", "t", "u",
+                "v", "w", "x", "y", "z",
+                "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+                ",", "?", "'", "!", "/", "(", ")", "&", ":", ";", "=", "+", "_", "\"", "@", " ", "\n"
+        };
+
         String[] morseCodes = {
                 ".-", "-...", "-.-.", "-..", ".", "..-.", "--.",
                 "....", "..", ".---", "-.-", ".-..", "--", "-.",
                 "---", ".--.", "--.-", ".-.", "...", "-", "..-",
                 "...-", ".--", "-..-", "-.--", "--..",
-                "-----", ".----", "..---", "...--", "....-", ".....",
-                "-....", "--...", "---..", "----."
+                "-----", ".----", "..---", "...--", "....-", ".....", "-....", "--...", "---..", "----.",
+                "--..--", "..--..", ".----.", "-.-.--", "-..-.", "-.--.", "-.--.-", ".-...", "---...", "-.-.-.", "-...-", ".-.-.", "..--.-", ".-..-.", ".--.-.", "/", "\n"
         };
-        for (int i = 0; i < letters.length; i++) {
-            if (!letters[i].isEmpty()) {
-                map.put(letters[i], morseCodes[i]);
-                map.put(morseCodes[i], letters[i].toUpperCase());
-            }
+
+        for (int i = 0; i < characters.length; i++) {
+            String ch = characters[i];
+            String code = morseCodes[i];
+
+            // Normalize keys to lowercase for consistency
+            map.put(ch.toLowerCase(), code);
+            map.put(code, ch); // Morse-to-char (return as is, not uppercased)
         }
     }
+
 }
