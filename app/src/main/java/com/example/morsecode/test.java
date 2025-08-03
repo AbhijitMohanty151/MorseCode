@@ -43,6 +43,8 @@ public class test extends AppCompatActivity {
         output=findViewById(R.id.output);
         err1=findViewById(R.id.err1);
 
+        input.setHint("Enter in "+(key==2?"Morsecode":"English"));
+
         generate();
 
         show.setOnClickListener(v -> {

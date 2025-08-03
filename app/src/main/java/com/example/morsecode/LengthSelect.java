@@ -14,7 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class LengthSelect extends AppCompatActivity {
 
-    private Button next;
+    private Button next,back;
     private TextView err;
     private EditText min,max;
     @Override
@@ -28,10 +28,15 @@ public class LengthSelect extends AppCompatActivity {
             return insets;
         });
         next=findViewById(R.id.next);
+        back=findViewById(R.id.back1);
         err=findViewById(R.id.err);
         min=findViewById(R.id.min);
         max=findViewById(R.id.max);
         int key=getIntent().getIntExtra("key",0);
+
+        back.setOnClickListener(v -> {
+            finish();
+        });
 
         next.setOnClickListener(v -> {
             String mi=min.getText().toString();
@@ -54,7 +59,7 @@ public class LengthSelect extends AppCompatActivity {
                 err.setText("*Maximum Length cannot be less than or eqyual to 0");
                 return;
             }
-            if(m1>26){
+            if(m2>26){
                 err.setText("*Minimum Length cannot be greater than 26");
                 return;
             }

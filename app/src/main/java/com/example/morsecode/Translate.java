@@ -39,7 +39,7 @@ public class Translate extends AppCompatActivity {
 
     private EditText input;
     private TextView eng, morse;
-    private Button translate;
+    private Button translate,back;
     private ImageButton cam;
 
     private static final int REQUEST_CAMERA = 1;
@@ -57,10 +57,14 @@ public class Translate extends AppCompatActivity {
         eng = findViewById(R.id.eng);
         morse = findViewById(R.id.morse);
         translate = findViewById(R.id.tr);
+        back = findViewById(R.id.back2);
         cam = findViewById(R.id.cam);
 
         initMap();
 
+        back.setOnClickListener(v -> {
+            finish();
+        });
         cam.setOnClickListener(v -> showImageSourceDialog());
         translate.setOnClickListener(v -> convertToMorseOrEnglish());
     }

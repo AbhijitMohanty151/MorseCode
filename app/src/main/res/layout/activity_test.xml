@@ -29,11 +29,31 @@
                 android:layout_height="200dp" />
 
             <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Character Sequence:"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/output"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingHorizontal="5dp"
+                android:text="Answer Sequence:"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/input"
@@ -45,7 +65,8 @@
                 android:inputType="text"
                 android:paddingHorizontal="5dp"
                 android:paddingVertical="5dp"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textColorHint="#80000000" />
 
             <TextView
                 android:id="@+id/err1"
